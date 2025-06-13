@@ -24,7 +24,7 @@ Protection Level is an indicator developed in South Africa that measures the rep
 
 The PA target was historically set at 20% for freshwater ecosystems, but with the adoption of the 30% for Target 3 of the Global Biodiversity Framework - the PA target increased to 30% in the EPL claculations (previous time points (2018) were recalculated using this higher target).
 
-#### Results: 
+#### Results:
 
 Overall per-ecosystem type EPL results [epl_riv_metrics_per_type.csv](outputs/epl_riv_metrics_per_type.csv)
 

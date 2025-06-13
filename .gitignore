@@ -1,17 +1,15 @@
-		# R-related files
-		*.Rproj
-		.Rproj.user/
-		.Rhistory
-		.RDataTmp1
-		.RDataTmp
-		.RData
-		.Ruserdata
-	
-		# Temporary files
-		*.log
-		*.tmp
-	
-		# System files
-		.DS_Store       # macOS
-		Thumbs.db       # Windows
+# R-related files
+*.Rproj
+.Rproj.user/
+.Rhistory
+.RDataTmp1
+.RDataTmp
+.RData
+.Ruserdata
+# Temporary files
+*.log
+*.tmp
+# System files
+.DS_Store       # macOS
+Thumbs.db       # Windows
 .Rproj.user

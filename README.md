@@ -10,9 +10,9 @@ June 2025
 
 This repository contains a workflow that results in the NBA 2025 Ecosystem Protection Level indicators for River Ecosystems of South Africa.
 
-The Quarto document [Riv.EPL.qmd](Riv.EPL.qmd) describes the import of Protected Areas time series data - prepared in ARCPRO by SANBI - based on the South African Protected Areas Database (SAPAD) 2024Q4 (Department of Forestry Fisheries and Environment); the import of the South African rivers database prepared by SANBI. the data were combined using the sf package in R and summarised using the Tidyverse in R.
+The Quarto document [Riv.EPL.qmd](Riv.EPL.qmd) describes the import of Protected Areas time series data - prepared in ARCPRO by SANBI - based on the South African Protected Areas Database (SAPAD) 2024Q4 (Department of Forestry Fisheries and Environment) and the import of the South African rivers database (v20250610) prepared by SANBI. The data were combined using the sf package in R and summarised using the tidyverse in R.
 
-Protection Level is an indicator developed in South Africa that measures the representation of ecosystem types within the PA network. The extent of each ecosystem type within the PA network is expressed as a proportion of the total extent. Four classes of Ecosystem Protection Level which is claculated per ecosystem type (n=222).
+Protection Level is an indicator developed in South Africa that measures the representation of ecosystem types within the PA network. The extent of each ecosystem type within the PA network is expressed as a proportion of the total extent. Four classes of Ecosystem Protection Level which is calculated per ecosystem type (n=222).
 
 -   Well Protected: 100% of the PA target with PA network
 
@@ -22,7 +22,7 @@ Protection Level is an indicator developed in South Africa that measures the rep
 
 -   Not Protected: less than 5% of PA target within the PA network
 
-The PA target was historically set at 20% for freshwater ecosystems, but with the adoption of the 30% for Target 3 of the Global Biodiversity Framework - the PA target increased to 30% in the EPL claculations (previous time points (2018) were recalculated using this higher target).
+The PA target was historically set at 20% for freshwater ecosystems, but with the adoption of the 30% for Target 3 of the Global Biodiversity Framework - the PA target increased to 30% in the EPL calculations (previous time points (2018) were recalculated using this higher target). Ecosystem condition (based on Present Ecological State) data for each time point allows for only intact (good condition river reaches to be considered representative). Only A and B condition rivers are considered "good"condition (\>=50% ecosystem integrity).
 
 #### Results:
 

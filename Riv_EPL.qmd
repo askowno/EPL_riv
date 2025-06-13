@@ -105,10 +105,9 @@ riv_type_24 <- riv %>%
    rename(A18=A, B18=B, C18=C, D18=D, E18=E, F18=F, DDef18 = `Data defic`) %>%
    left_join(riv_type_pa24, by = "RIVTYPE") %>%
    rename(DDef = `Data defic`) %>%
-   left_join(riv, by = "RIVTYPE") %>%
    mutate(prp_pa18 = tot_pa18/tot_leng18) %>%
    mutate(prp_pa18_ab = (A18 + B18 + DDef18)/tot_leng18) %>%
-   mutate(prp_pa18_model = (A18 + B18  + DDef18 + (0.5*C18) + (0.3*D18) + (0.3*E18) + (0.1*F18))/tot_leng18) %>%
+   mutate(prp_pa18_model = (A18 + B18  + DDef18 + C18 + (0.5*D18) + (0.3*E18) + (0.1*F18))/tot_leng18) %>%
    mutate(EPL18_all = case_when( prp_pa18 >= 0.2 ~ "WP", 
                                  prp_pa18 >= 0.1 ~ "MP",
                                  prp_pa18 >= 0.01 ~ "PP",
@@ -123,7 +122,7 @@ riv_type_24 <- riv %>%
                                  TRUE ~ "NP")) %>%
    mutate(prp_pa24 = tot_pa24/tot_leng18) %>%
    mutate(prp_pa24_ab = (A + B + DDef)/tot_leng18) %>%
-   mutate(prp_pa24_model = (A + B  + DDef + (0.5*C) + (0.3*D) + (0.3*E) + (0.1*F                                ))/tot_leng18) %>%
+   mutate(prp_pa24_model = (A + B  + DDef + (0.5*C) + (0.3*D) + (0.1*E))/tot_leng18) %>%
    mutate(EPL24_all = case_when( prp_pa24 >= 0.2 ~ "WP", 
                                  prp_pa24 >= 0.1 ~ "MP",
                                  prp_pa24 >= 0.01 ~ "PP",
@@ -136,18 +135,25 @@ riv_type_24 <- riv %>%
                                  prp_pa24_model >= 0.1 ~ "MP",
                                  prp_pa24_model >= 0.01 ~ "PP",
                                  TRUE ~ "NP")) %>%
-   # add in River Zones based on last letter of RIVTYPE
-   
+  # add in River Zones based on last letter of RIVTYPE
+   mutate(zone = case_when(str_ends(RIVTYPE, "U") ~ "Upper foothill",
+                           str_ends(RIVTYPE, "L") ~ "Lower foothill", 
+                           str_ends(RIVTYPE, "F") ~ "Lowland river", 
+                           str_ends(RIVTYPE, "M") ~ "Mountain stream", 
+                           TRUE ~  "other"))
+   # export a csv of results - Condition and EPL per river type 2018 and 2024
+   write.csv(riv_type_metrics, file = "outputs/epl_riv_metrics_per_type.csv")
 ```
 
 Summarise
 
 ```{r}
-# make summary counts of EPL
- epl18_sum <- riv_type_metrics %>%
-    group_by(EPL18_model) %>%
+# 2018 summaries
+# make summary counts of EPL categories per River Slopes Zones 
+ epl18ab_sum <- riv_type_metrics %>%
+    group_by(EPL18_ab, zone) %>%
   summarise(count = n(),.groups = 'drop') %>%
-  pivot_wider(names_from = EPL18_model, 
+  pivot_wider(names_from = EPL18_ab, 
               values_from = count, values_fill = 0) %>%
   relocate(WP, .before = MP)%>%
   relocate(NP, .after = PP) %>%
@@ -156,14 +162,50 @@ Summarise
   mutate(Total = sum(c_across(where(is.numeric)))) %>%
   ungroup() %>%
   # Add TOTAL row (column-wise sums)
-  bind_rows(summarise(., T_BIOME = "Total", across(where(is.numeric), sum))) %>%
+  bind_rows(summarise(., zone = "Total", across(where(is.numeric), sum))) %>%
   # Add EPLindex
-  mutate(EPLI = ((WP*3)+(MP*2)+(PP*1)+(NP*0))/((WP+MP+PP+NP)*3)) 
+  mutate(EPLI = ((WP*3)+(MP*2)+(PP*1)+(NP*0))/((WP+MP+PP+NP)*3)) %>%
+    mutate(zone = factor(zone, levels = c("Total", "Lowland river", "Lower foothill"           , "Upper foothill", "Mountain stream"))) %>% ## ggplot plots inverted factors!
+   arrange(zone)
  
- epl24_sum <- riv_type_metrics %>%
-    group_by(EPL24_model) %>%
+ # export a csv of results - COUNT of EPL 18 per slope zone
+ write.csv(epl18ab_sum, file = "outputs/epl18_riv_sum_count.csv") 
+ 
+  # make summary of extent of EPL
+ epl18ab_sum_ext <- riv_type_metrics %>%
+    group_by(EPL18_ab, zone) %>%
+  summarise(length = round(sum(tot_leng18)/1000, 0),.groups = 'drop') %>%
+  pivot_wider(names_from = EPL18_ab, 
+              values_from = length, values_fill = 0) %>%
+  relocate(WP, .before = MP)%>%
+  relocate(NP, .after = PP) %>%
+   # Add row-wise TOTAL
+  rowwise() %>%
+  mutate(Total = sum(c_across(where(is.numeric)))) %>%
+  ungroup() %>%
+  # Add TOTAL row (column-wise sums)
+  bind_rows(summarise(., zone = "Total", across(where(is.numeric), sum))) %>%
+    mutate(zone = factor(zone, levels = c("Total", "Lowland river", "Lower foothill"           , "Upper foothill", "Mountain stream"))) %>% ## ggplot plots inverted factors!
+   arrange(zone)
+ 
+ # export a csv of results - EXTENT (km) of EPL 18 per slope zone
+  write.csv(epl18ab_sum_ext, file = "outputs/epl18_riv_sum_ext.csv")
+  
+ # Convert extent per epl category to proportion 
+  epl18ab_sum_prpext <- epl18ab_sum_ext %>%
+  filter(zone != "Total") %>%
+  mutate(across(c(WP, MP, PP, NP), ~ round(.x / Total, 3))) %>%
+  select(zone, WP, MP, PP, NP)
+  
+  # export a csv of results - PROPORTIONAL EXTENT  (km) of EPL 18 per slope zone
+   write.csv(epl18ab_sum_prpext, file = "outputs/epl18_riv_sum_prp.csv")
+ 
+  # 2024 summaries
+  # make summary counts of EPL
+  epl24ab_sum <- riv_type_metrics %>%
+    group_by(EPL24_ab, zone) %>%
   summarise(count = n(),.groups = 'drop') %>%
-  pivot_wider(names_from = EPL24_model, 
+  pivot_wider(names_from = EPL24_ab, 
               values_from = count, values_fill = 0) %>%
   relocate(WP, .before = MP)%>%
   relocate(NP, .after = PP) %>%
@@ -172,10 +214,42 @@ Summarise
   mutate(Total = sum(c_across(where(is.numeric)))) %>%
   ungroup() %>%
   # Add TOTAL row (column-wise sums)
-  bind_rows(summarise(., T_BIOME = "Total", across(where(is.numeric), sum))) %>%
+  bind_rows(summarise(., zone = "Total", across(where(is.numeric), sum))) %>%
   # Add EPLindex
-  mutate(EPLI = ((WP*3)+(MP*2)+(PP*1)+(NP*0))/((WP+MP+PP+NP)*3)) 
+  mutate(EPLI = ((WP*3)+(MP*2)+(PP*1)+(NP*0))/((WP+MP+PP+NP)*3)) %>%
+    mutate(zone = factor(zone, levels = c("Total", "Lowland river", "Lower foothill"           , "Upper foothill", "Mountain stream"))) %>% ## ggplot plots inverted factors!
+   arrange(zone)
+  
+ # export a csv of results - COUNT of EPL 18 per slope zone
+ write.csv(epl24ab_sum, file = "outputs/epl24_riv_sum_count.csv") 
  
+  # make summary of extent of EPL
+ epl24ab_sum_ext <- riv_type_metrics %>%
+    group_by(EPL24_ab, zone) %>%
+  summarise(length = round(sum(tot_leng18)/1000, 0),.groups = 'drop') %>%
+  pivot_wider(names_from = EPL24_ab, 
+              values_from = length, values_fill = 0) %>%
+  relocate(WP, .before = MP)%>%
+  relocate(NP, .after = PP) %>%
+   # Add row-wise TOTAL
+  rowwise() %>%
+  mutate(Total = sum(c_across(where(is.numeric)))) %>%
+  ungroup() %>%
+  # Add TOTAL row (column-wise sums)
+  bind_rows(summarise(., zone = "Total", across(where(is.numeric), sum))) %>%
+    mutate(zone = factor(zone, levels = c("Total", "Lowland river", "Lower foothill"           , "Upper foothill", "Mountain stream"))) %>% ## ggplot plots inverted factors!
+   arrange(zone)
+ 
+ # export a csv of results - EXTENT (km) of EPL 18 per slope zone
+  write.csv(epl24ab_sum_ext, file = "outputs/epl24_riv_sum_ext.csv")
+ 
+ epl24ab_sum_prpext <- epl24ab_sum_ext %>%
+  filter(zone != "Total") %>%
+  mutate(across(c(WP, MP, PP, NP), ~ round(.x / Total, 3))) %>%
+  select(zone, WP, MP, PP, NP)
+ 
+ # export a csv of results - PROPORTIONAL EXTENT  (km) of EPL 18 per slope zone
+   write.csv(epl24ab_sum_prpext, file = "outputs/epl24_riv_sum_prp.csv")
 ```
 
 #### **Make graphs for NBA**
@@ -186,55 +260,70 @@ Summarise
 library(nbaR)
 
 # Use NBA package to make EPL graph (need high res output for booklet)
-EPL <- riv_type_metrics %>%
+EPL24count <- epl24ab_sum %>%
     rename(`Well Protected` = WP, 
            `Moderately Protected` = MP, 
            `Poorly Protected` = PP, 
            `Not Protected` = NP ) # %>%
   # select(-...1) # required if importing from CSV
  
-epl24_bar_plot <- nba_plot(EPL,
-                  `T_BIOME`,
+epl24_bar_plot_count <- nba_plot(EPL24count,
+                  `zone`,
                   2:5,
                  CHRT = "bar",
                  NUM = TRUE,
                  LAB = "Percentage of ecosystem types",
                 SAVE = NULL)
 
-epl24_bar_plot
+epl24_bar_plot_count
 
 #export the graph
 ggsave(
-  filename = "outputs/epl24_bar_plot.jpeg", # File name
-  plot = epl24_bar_plot,                   # Plot object
+  filename = "outputs/epl24_riv_bar_plot_count.jpeg", # File name
+  plot = epl24_bar_plot_count,                  # Plot object
   device = "jpeg",                        # File format
   width = 16, height = 12, units = "cm",   # Dimensions
   dpi = 300                               # Resolution
 )
 
-#make a line plot of EPL Index using 2018 and 2014 timepoints - request Natasha to impve this or add to package.
+# graphs for extent per slope zone per epl category
 
-biome_colors <- c(
-  "Albany Thicket" = "darkgreen",
-  "Azonal" = "blue",
-  "Desert" =  "darkgrey",
-  "Forest" =  "darkblue",
-  "Fynbos"  =  "purple",
-  "Grassland"  = "green3",
-  "IOCB"  = "orange",
-  "Nama-Karoo" = "brown1",
-  "Savanna"  =  "brown",
-  "Succulent Karoo"  = "yellow3",
-  "Total" = "black"
+EPL24ext <- epl24ab_sum_ext %>%
+    rename(`Well Protected` = WP, 
+           `Moderately Protected` = MP, 
+           `Poorly Protected` = PP, 
+           `Not Protected` = NP ) # %>%
+  # select(-...1) # required if importing from CSV
+ 
+epl24_bar_plot_ext <- nba_plot(EPL24ext,
+                  `zone`,
+                  2:5,
+                 CHRT = "bar",
+                 NUM = FALSE,
+                 LAB = "Percentage of ecosystem extent",
+                SAVE = NULL)
+
+epl24_bar_plot_ext
+
+#export the graph
+ggsave(
+  filename = "outputs/epl24_riv_bar_plot_ext.jpeg", # File name
+  plot = epl24_bar_plot_ext,                   # Plot object
+  device = "jpeg",                        # File format
+  width = 16, height = 12, units = "cm",   # Dimensions
+  dpi = 300                               # Resolution
 )
 
-EPLI <- epl2024inv_sum %>%
-  select(T_BIOME, EPLI) %>% 
+
+# Make a line plot of EPL Index using 2018 and 2014 timepoints - request Natasha to impve this or add to package.
+
+EPLI <- epl24ab_sum %>%
+  select(zone, EPLI) %>% 
   rename(EPLI24 = EPLI) %>%
-   left_join(epl2018inv_sum, by ="T_BIOME") %>%
+   left_join(epl18ab_sum, by ="zone") %>%
    rename(EPLI18 = EPLI) %>%
-   rename(Biome = T_BIOME) %>%
-  select(Biome,EPLI18, EPLI24) %>%
+   rename(Zone = zone) %>%
+  select(Zone,EPLI18, EPLI24) %>%
   pivot_longer(cols = c(2,3), names_to = "Year", values_to = "EPLI") %>%
     mutate(Year = case_when(
     Year == "EPLI18" ~ "2018",
@@ -242,19 +331,36 @@ EPLI <- epl2024inv_sum %>%
     TRUE ~ Year
   ))
   
-  epli_line_plot <- ggplot(EPLI, aes(x = Year, y = EPLI, group = Biome, color = Biome)) +
-  scale_color_manual(values = biome_colors) + 
-    geom_line(size = 1.2) +
-  geom_point(size = 2) +
+  epli_line_plot <- ggplot(EPLI, aes(x = Year, y = EPLI, group = Zone)) +
+  geom_line(aes(linetype = Zone, color = Zone), linewidth = 1.2) +
+  geom_point(aes(color = Zone), size = 2) +
   theme_minimal() +
   labs(x = "Year", y = "EPLI") +
-  scale_x_discrete(limits = c("2018", "2024"))
+  scale_x_discrete(limits = c("2018", "2024")) +
+  scale_color_manual(values = c(
+    "Total" = "black",
+    "Lowland river" = "blue",
+    "Lower foothill" = "darkgreen",
+    "Upper foothill" = "brown",
+    "Mountain stream" = "orange"
+  )) +
+#  scale_linetype_manual(values = c(
+  #   "Total" = "solid",
+  #   "Lowland river" = "dotdash",
+  #   "Lower foothill" = "dashed",
+  #   "Upper foothill" = "dashed",
+  #   "Mountain stream" = "dotted"
+  # )) +
+  coord_cartesian(ylim = c(0.1, 0.5)) +
+    guides(color = guide_legend(reverse = TRUE),
+         linetype = guide_legend(reverse = TRUE)) +
+  theme(legend.title = element_blank())
   
   epli_line_plot
   
   #export the graph
 ggsave(
-  filename = "outputs/epli_line_plot.jpeg", # File name
+  filename = "outputs/epli_riv_line_plot.jpeg", # File name
   plot = epli_line_plot,                   # Plot object
   device = "jpeg",                        # File format
   width = 16, height = 12, units = "cm",   # Dimensions

@@ -108,32 +108,32 @@ riv_type_24 <- riv %>%
    mutate(prp_pa18 = tot_pa18/tot_leng18) %>%
    mutate(prp_pa18_ab = (A18 + B18 + DDef18)/tot_leng18) %>%
    mutate(prp_pa18_model = (A18 + B18  + DDef18 + C18 + (0.5*D18) + (0.3*E18) + (0.1*F18))/tot_leng18) %>%
-   mutate(EPL18_all = case_when( prp_pa18 >= 0.2 ~ "WP", 
-                                 prp_pa18 >= 0.1 ~ "MP",
-                                 prp_pa18 >= 0.01 ~ "PP",
+   mutate(EPL18_all = case_when( prp_pa18 >= 0.3 ~ "WP", 
+                                 prp_pa18 >= 0.15 ~ "MP",
+                                 prp_pa18 >= 0.015 ~ "PP",
                                  TRUE ~ "NP")) %>% 
-   mutate(EPL18_ab = case_when( prp_pa18_ab >= 0.2 ~ "WP", 
-                                 prp_pa18_ab >= 0.1 ~ "MP",
-                                 prp_pa18_ab >= 0.01 ~ "PP",
+   mutate(EPL18_ab = case_when( prp_pa18_ab >= 0.3 ~ "WP", 
+                                 prp_pa18_ab >= 0.15 ~ "MP",
+                                 prp_pa18_ab >= 0.015 ~ "PP",
                                  TRUE ~ "NP")) %>% 
-   mutate(EPL18_model = case_when( prp_pa18_model >= 0.2 ~ "WP", 
-                                 prp_pa18_model >= 0.1 ~ "MP",
-                                 prp_pa18_model >= 0.01 ~ "PP",
+   mutate(EPL18_model = case_when( prp_pa18_model >= 0.3 ~ "WP", 
+                                 prp_pa18_model >= 0.15 ~ "MP",
+                                 prp_pa18_model >= 0.015 ~ "PP",
                                  TRUE ~ "NP")) %>%
    mutate(prp_pa24 = tot_pa24/tot_leng18) %>%
    mutate(prp_pa24_ab = (A + B + DDef)/tot_leng18) %>%
    mutate(prp_pa24_model = (A + B  + DDef + (0.5*C) + (0.3*D) + (0.1*E))/tot_leng18) %>%
-   mutate(EPL24_all = case_when( prp_pa24 >= 0.2 ~ "WP", 
-                                 prp_pa24 >= 0.1 ~ "MP",
-                                 prp_pa24 >= 0.01 ~ "PP",
+   mutate(EPL24_all = case_when( prp_pa24 >= 0.3 ~ "WP", 
+                                 prp_pa24 >= 0.15 ~ "MP",
+                                 prp_pa24 >= 0.015 ~ "PP",
                                  TRUE ~ "NP")) %>% 
-   mutate(EPL24_ab = case_when( prp_pa24_ab >= 0.2 ~ "WP", 
-                                 prp_pa24_ab >= 0.1 ~ "MP",
-                                 prp_pa24_ab >= 0.01 ~ "PP",
+   mutate(EPL24_ab = case_when( prp_pa24_ab >= 0.3 ~ "WP", 
+                                 prp_pa24_ab >= 0.15 ~ "MP",
+                                 prp_pa24_ab >= 0.015 ~ "PP",
                                  TRUE ~ "NP")) %>% 
-   mutate(EPL24_model = case_when( prp_pa24_model >= 0.2 ~ "WP", 
-                                 prp_pa24_model >= 0.1 ~ "MP",
-                                 prp_pa24_model >= 0.01 ~ "PP",
+   mutate(EPL24_model = case_when( prp_pa24_model >= 0.3 ~ "WP", 
+                                 prp_pa24_model >= 0.15 ~ "MP",
+                                 prp_pa24_model >= 0.015 ~ "PP",
                                  TRUE ~ "NP")) %>%
   # add in River Zones based on last letter of RIVTYPE
    mutate(zone = case_when(str_ends(RIVTYPE, "U") ~ "Upper foothill",

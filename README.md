@@ -8,7 +8,7 @@ June 2025
 
 #### **Summary**
 
-This repository contains a workflow that results in the NBA 2025 Ecosystem Protection Level indicators for River Ecosystems of South Africa.
+This repository contains a workflow that results in the NBA 2025 Ecosystem Protection Level indicators for River Ecosystems of South Africa following the methods of van [Deventer et al., 2019.](http://hdl.handle.net/20.500.12143/5847)
 
 The Quarto document [Riv.EPL.qmd](Riv.EPL.qmd) describes the import of Protected Areas time series data - prepared in ARCPRO by SANBI - based on the South African Protected Areas Database (SAPAD) 2024Q4 (Department of Forestry Fisheries and Environment) and the import of the South African rivers database (v20250610) prepared by SANBI. The data were combined using the sf package in R and summarised using the tidyverse in R.
 
@@ -22,7 +22,7 @@ Protection Level is an indicator developed in South Africa that measures the rep
 
 -   Not Protected: less than 5% of PA target within the PA network
 
-The PA target was historically set at 20% for freshwater ecosystems, but with the adoption of the 30% for Target 3 of the Global Biodiversity Framework - the PA target was increased to 30% in the EPL calculations (previous time points (2018) were recalculated using this higher target). Ecosystem condition (based on Present Ecological State) data for each time point allows for only intact (good condition river reaches to be considered representative). Only A and B condition rivers are considered "good"condition (\>=50% ecosystem integrity).
+The PA target was historically set at 20% for freshwater ecosystems, but with the adoption of the 30% targets for Target 3 of the Global Biodiversity Framework - the PA target was increased to 30% in the EPL calculations (previous time points (2018) were recalculated using this higher target). Ecosystem condition (based on Present Ecological State) data for each time point allows for only intact (good condition river reaches to be considered representative). Only A and B condition rivers are considered "good" condition (\>=50% ecosystem integrity).
 
 #### Results:
 

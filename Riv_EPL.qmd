@@ -107,7 +107,7 @@ riv_type_24 <- riv %>%
    rename(DDef = `Data defic`) %>%
    mutate(prp_pa18 = tot_pa18/tot_leng18) %>%
    mutate(prp_pa18_ab = (A18 + B18 + DDef18)/tot_leng18) %>%
-   mutate(prp_pa18_model = (A18 + B18  + DDef18 + C18 + (0.5*D18) + (0.3*E18) + (0.1*F18))/tot_leng18) %>%
+   mutate(prp_pa18_model = (A18 + B18  + DDef18 + (0.3*(C18+D18)) + (0.1*(E18+F18)))/tot_leng18) %>%
    mutate(EPL18_all = case_when( prp_pa18 >= 0.3 ~ "WP", 
                                  prp_pa18 >= 0.15 ~ "MP",
                                  prp_pa18 >= 0.015 ~ "PP",
@@ -127,7 +127,7 @@ riv_type_24 <- riv %>%
                                  TRUE ~ "NP")) %>%
    mutate(prp_pa24 = tot_pa24/tot_leng18) %>%
    mutate(prp_pa24_ab = (A + B + DDef)/tot_leng18) %>%
-   mutate(prp_pa24_model = (A + B  + DDef + (0.5*C) + (0.3*D) + (0.1*E))/tot_leng18) %>%
+   mutate(prp_pa24_model = (A + B  + DDef + (0.3* (C+D)) + (0.1*(E+F)))/tot_leng18) %>%
    mutate(EPL24_all = case_when( prp_pa24 >= 0.3 ~ "WP", 
                                  prp_pa24 >= 0.15 ~ "MP",
                                  prp_pa24 >= 0.015 ~ "PP",
@@ -283,16 +283,21 @@ epl24_bar_plot_count <- nba_plot(EPL24count,
                  CHRT = "bar",
                  NUM = TRUE,
                  LAB = "Percentage of ecosystem types",
-                SAVE = NULL)
+                SAVE = NULL, 
+                SCALE_TEXT = 0.6)
 
-epl24_bar_plot_count
+# adjust legend position
+epl24_bar_plot_count <- epl24_bar_plot_count +
+  theme(
+    legend.position = "bottom",             # keep it at the bottom
+    legend.margin = margin(l = -45, r = -5, t = -5, b = -5)) 
 
 #export the graph
 ggsave(
   filename = "outputs/epl24_riv_bar_plot_count.jpeg", # File name
   plot = epl24_bar_plot_count,                  # Plot object
   device = "jpeg",                        # File format
-  width = 16, height = 12, units = "cm",   # Dimensions
+  width = 9, height = 7,  units = "cm",   # Dimensions
   dpi = 300                               # Resolution
 )
 
@@ -311,16 +316,21 @@ epl24_bar_plot_ext <- nba_plot(EPL24ext,
                  CHRT = "bar",
                  NUM = FALSE,
                  LAB = "Percentage of ecosystem extent",
-                SAVE = NULL)
+                SAVE = NULL, 
+                SCALE_TEXT = 0.6)
 
-epl24_bar_plot_ext
+# adjust legend position
+epl24_bar_plot_ext <- epl24_bar_plot_ext +
+  theme(
+    legend.position = "bottom",             # keep it at the bottom
+    legend.margin = margin(l = -45, r = -5, t = -5, b = -5)) 
 
 #export the graph
 ggsave(
   filename = "outputs/epl24_riv_bar_plot_ext.jpeg", # File name
   plot = epl24_bar_plot_ext,                   # Plot object
   device = "jpeg",                        # File format
-  width = 16, height = 12, units = "cm",   # Dimensions
+  width = 9, height = 7, units = "cm",   # Dimensions
   dpi = 300                               # Resolution
 )
 
@@ -359,14 +369,12 @@ EPLI <- epl24_sum %>%
          linetype = guide_legend(reverse = TRUE)) +
   theme(legend.title = element_blank())
   
-  epli_line_plot
-  
   #export the graph
 ggsave(
   filename = "outputs/epli_riv_line_plot.jpeg", # File name
   plot = epli_line_plot,                   # Plot object
   device = "jpeg",                        # File format
-  width = 16, height = 12, units = "cm",   # Dimensions
+  width = 14, height = 9, units = "cm",   # Dimensions
   dpi = 300                               # Resolution
 )
 ```

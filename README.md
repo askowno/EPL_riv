@@ -16,13 +16,13 @@ Protection Level is an indicator developed in South Africa that measures the rep
 
 -   Well Protected: 100% of the PA target within PA network; and only A&B condition rivers contribute
 
--   Moderately Protected: 50% to 99% of PA target within the PA network; and A&B condition rivers contribute 100%, C condition rivers contribute 50%, D condition rivers contribute 30% and E&F condition rivers contribute 10%
+-   Moderately Protected: 50% to 99% of PA target within the PA network; and A&B condition rivers contribute 100%, C & D condition rivers contribute 30%, E & F condition rivers contribute 10%
 
--   Poorly Protected: 5% to 49% of PA target within the PA network; and A&B condition rivers contribute 100%, C condition rivers contribute 50%, D condition rivers contribute 30% and E&F condition rivers contribute 10%
+-   Poorly Protected: 5% to 49% of PA target within the PA network; and A&B condition rivers contribute 100%, C & D condition rivers contribute 30%, E & F condition rivers contribute 10%
 
--   Not Protected: less than 5% of PA target within the PA network; and A&B condition rivers contribute 100%, C condition rivers contribute 50%, D condition rivers contribute 30% and E&F condition rivers contribute 10%
+-   Not Protected: less than 5% of PA target within the PA network; and A&B condition rivers contribute 100%, C & D condition rivers contribute 30%, E & F condition rivers contribute 10%
 
-The PA target was historically set at 20% for freshwater ecosystems, but with the adoption of the 30% targets for Target 3 of the Global Biodiversity Framework - the PA target was increased to 30% in the EPL calculations (previous time points (2018) were recalculated using this higher target). Ecosystem condition (based on Present Ecological State) data for each time point allows for only good condition river reaches to be considered representative for Well Protected status; while for MP PP and NP the condition of the rivers is used to calculate their contribution to meeting targets - higher intergrity / condition rivers contribute more to meeting PA targets than low integrity / condition rivers.
+The PA target was historically set at 20% for freshwater ecosystems, but with the adoption of the 30% targets for Target 3 of the Global Biodiversity Framework - the PA target was increased to 30% in the EPL calculations (previous time points (2018) were recalculated using this higher target). Ecosystem condition (based on Present Ecological State) data for each time point allows for only good condition river reaches to be considered representative for Well Protected status; while for MP PP and NP the condition of the rivers is used to calculate their contribution to meeting targets - higher integrity / condition rivers contribute more to meeting PA targets than low integrity / condition rivers.
 
 #### Results:
 
@@ -32,10 +32,12 @@ Summary table - count of river ecosystem types per slope zone per EPL category [
 
 [epl24_riv_bar_plot_count.jpeg](outputs/epl24_riv_bar_plot_count.jpeg)
 
-![River Ecosystem - Ecosystem Protection Level 2025](outputs/epl24_riv_bar_plot_count.jpeg)
-
 Summary table - extent of river per slope zone per EPL category [epl24_riv_sum_ext.csv](outputs/epl24_riv_sum_ext.csv) [epl24_riv_bar_plot_ext.jpeg](outputs/epl24_riv_bar_plot_ext.jpeg)
 
-Summary table - extent of river e per slope zone per EPL category (expressed as a proportion) [epl24_riv_sum_prp.csv](outputs/epl24_riv_sum_prp.csv)
+| EPL 2024 count  of types per category | EPL 2024 extent of types per category |
+|----|----|
+| ![](outputs/epl24_riv_bar_plot_count.jpeg) | ![](outputs/epl24_riv_bar_plot_ext.jpeg) |
 
-Ecosystem Protection Level INDEX (change from 2018 to 2024) [epli_riv_line_plot.jpeg](outputs/epli_riv_line_plot.jpeg)
+| Ecosystem Protection Level INDEX (change from 2018 to 2024)  |
+|--------------------------------------------------------------|
+| ![](outputs/epli_riv_line_plot.jpeg)                         |
